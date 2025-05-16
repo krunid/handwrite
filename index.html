@@ -32,7 +32,16 @@
   </p>
   
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+    
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+    <div class="md:col-span-1">
+      <label class="block text-sm font-medium text-gray-700 mb-1">รูปแบบตัวเลข</label>
+      <select id="numberType" class="w-full p-2 border rounded">
+        <option value="arabic">อารบิก (1, 2, 3)</option>
+        <option value="thai">ไทย (๑, ๒, ๓)</option>
+      </select>
+    </div>
+
       <input id="fullname" type="text" placeholder="ชื่อ - นามสกุล" class="p-2 border rounded w-full">
       <input id="classroom" type="text" placeholder="ชั้น" class="p-2 border rounded w-full">
       <input id="number" type="text" placeholder="เลขที่" class="p-2 border rounded w-full">
@@ -54,6 +63,12 @@
   </footer>
 
   <script>
+    
+      function toThaiNumber(num) {
+        const thNums = ["๐","๑","๒","๓","๔","๕","๖","๗","๘","๙"];
+        return num.toString().split("").map(d => thNums[parseInt(d)] || d).join("");
+      }
+
     async function generateImage() {
       const canvas = document.getElementById('myCanvas');
       const ctx = canvas.getContext('2d');
@@ -81,7 +96,12 @@
         ctx.lineTo(canvas.width - 80, y + 10);
         ctx.strokeStyle = "#ccc";
         ctx.stroke();
-        ctx.fillText(`${i + 1}. ${name} ชั้น ${classroom} เลขที่ ${number}`, 100, y);
+        
+        const numberType = document.getElementById("numberType").value;
+        const lineNumber = numberType === 'thai' ? toThaiNumber(i + 1) : (i + 1);
+        const showNumber = numberType === 'thai' ? toThaiNumber(number) : number;
+        ctx.fillText(`${lineNumber}. ${name} ชั้น ${classroom} เลขที่ ${showNumber}`, 100, y);
+  
       }
 
       for (let i = 0; i < 5; i++) {
