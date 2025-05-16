@@ -36,7 +36,7 @@
 
     <canvas id="myCanvas" width="900" height="1200" class="mx-auto mt-6"></canvas>
 
-    <a id="downloadLink" class="block mt-4 text-center bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded" download="tracing-name.png">
+    <a id="downloadLink" class="block mt-4 text-center bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
       📥 ดาวน์โหลดภาพ
     </a>
   </div>
@@ -63,7 +63,7 @@
       // หัวข้อ
       ctx.fillText("แบบฝึกหัดเขียนชื่อตามรอยปะ", 180, 60);
 
-      // ขนาดบรรทัดและการจัดวาง
+      // บรรทัดข้อความ
       const startY = 120;
       const lineHeight = 95;
       for (let i = 0; i < 10; i++) {
@@ -81,9 +81,11 @@
         ctx.fillText("★", 180 + i * 120, 1150);
       }
 
-      // เตรียมลิงก์ดาวน์โหลด
+      // ดาวน์โหลดภาพ
       const link = document.getElementById("downloadLink");
       link.href = canvas.toDataURL("image/png");
+      const nameForFile = name.trim().replace(/\s+/g, "_");
+      link.download = `${nameForFile || "tracing-name"}.png`;
     }
   </script>
 </body>
