@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>เขียนชื่อตามรอยปะ</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>แบบฝึกเขียนชื่อ</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @font-face {
@@ -12,7 +12,7 @@
     }
     body {
       font-family: 'Kanit', sans-serif;
-      background: #f0f4f8;
+      background-color: #f0f4f8;
     }
     canvas {
       border: 2px dashed #ccc;
@@ -21,21 +21,23 @@
   </style>
 </head>
 <body class="flex flex-col items-center px-4 py-6">
-  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-xl">
-    <h1 class="text-2xl font-bold text-center mb-4">แบบฝึกเขียนชื่อ ✍️</h1>
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-3xl">
+    <h1 class="text-3xl font-bold text-center mb-6">📝 แบบฝึกเขียนชื่อตามเส้นประ</h1>
 
-    <input id="fullname" type="text" placeholder="ชื่อ - นามสกุล" class="w-full p-2 mb-2 border rounded">
-    <input id="classroom" type="text" placeholder="ชั้น" class="w-full p-2 mb-2 border rounded">
-    <input id="number" type="text" placeholder="เลขที่" class="w-full p-2 mb-4 border rounded">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <input id="fullname" type="text" placeholder="ชื่อ - นามสกุล" class="p-2 border rounded w-full">
+      <input id="classroom" type="text" placeholder="ชั้น" class="p-2 border rounded w-full">
+      <input id="number" type="text" placeholder="เลขที่" class="p-2 border rounded w-full">
+    </div>
 
-    <button onclick="generateImage()" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-bold">
-      สร้างใบงาน
+    <button onclick="generateImage()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-bold">
+      ➕ สร้างใบงาน
     </button>
 
-    <canvas id="myCanvas" width="750" height="1000"></canvas>
+    <canvas id="myCanvas" width="900" height="1200" class="mx-auto mt-6"></canvas>
 
     <a id="downloadLink" class="block mt-4 text-center bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded" download="tracing-name.png">
-      ดาวน์โหลดภาพ
+      📥 ดาวน์โหลดภาพ
     </a>
   </div>
 
@@ -51,33 +53,35 @@
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // โหลดฟอนต์ลายมือ
+      // โหลดฟอนต์
       const font = new FontFace('LayijiDotted', 'url(Layiji_kutlaimuu.ttf)');
       await font.load();
       document.fonts.add(font);
-      ctx.font = "28px LayijiDotted";
+      ctx.font = "48px LayijiDotted";
       ctx.fillStyle = "#000";
 
       // หัวข้อ
-      ctx.fillText("แบบฝึกหัดเขียนชื่อตามรอยปะ", 180, 50);
+      ctx.fillText("แบบฝึกหัดเขียนชื่อตามรอยปะ", 180, 60);
 
-      // วาดบรรทัดและชื่อ
+      // ขนาดบรรทัดและการจัดวาง
+      const startY = 120;
+      const lineHeight = 95;
       for (let i = 0; i < 10; i++) {
-        const y = 110 + i * 85;
+        const y = startY + i * lineHeight;
         ctx.beginPath();
-        ctx.moveTo(60, y + 10);
-        ctx.lineTo(690, y + 10);
+        ctx.moveTo(80, y + 10);
+        ctx.lineTo(canvas.width - 80, y + 10);
         ctx.strokeStyle = "#ccc";
         ctx.stroke();
-        ctx.fillText(`${i + 1}. ${name} ชั้น ${classroom} เลขที่ ${number}`, 80, y);
+        ctx.fillText(`${i + 1}. ${name} ชั้น ${classroom} เลขที่ ${number}`, 100, y);
       }
 
-      // วาดดาวด้านล่าง
+      // วาดดาวล่างสุด
       for (let i = 0; i < 5; i++) {
-        ctx.fillText("★", 120 + i * 100, 920);
+        ctx.fillText("★", 180 + i * 120, 1150);
       }
 
-      // เตรียมดาวน์โหลด
+      // เตรียมลิงก์ดาวน์โหลด
       const link = document.getElementById("downloadLink");
       link.href = canvas.toDataURL("image/png");
     }
