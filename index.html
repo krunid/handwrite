@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -20,8 +21,8 @@
     }
   </style>
 </head>
-<body class="flex flex-col items-center px-4 py-6">
-  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-3xl">
+<body class="flex flex-col items-center px-4 py-6 min-h-screen">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-full max-w-3xl flex-grow">
     <h1 class="text-3xl font-bold text-center mb-6">📝 แบบฝึกเขียนชื่อตามเส้นประ</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -41,6 +42,10 @@
     </a>
   </div>
 
+  <footer class="text-center mt-8 text-sm text-gray-500">
+    © 2025 จัดทำโดย ครูนิด | ระบบเขียนชื่อตามเส้นประเพื่อการเรียนรู้
+  </footer>
+
   <script>
     async function generateImage() {
       const canvas = document.getElementById('myCanvas');
@@ -49,21 +54,17 @@
       const classroom = document.getElementById('classroom').value;
       const number = document.getElementById('number').value;
 
-      // เคลียร์พื้นหลัง
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // โหลดฟอนต์
       const font = new FontFace('LayijiDotted', 'url(Layiji_kutlaimuu.ttf)');
       await font.load();
       document.fonts.add(font);
       ctx.font = "48px LayijiDotted";
       ctx.fillStyle = "#000";
 
-      // หัวข้อ
       ctx.fillText("แบบฝึกหัดเขียนชื่อตามรอยปะ", 180, 60);
 
-      // บรรทัดข้อความ
       const startY = 120;
       const lineHeight = 95;
       for (let i = 0; i < 10; i++) {
@@ -76,12 +77,10 @@
         ctx.fillText(`${i + 1}. ${name} ชั้น ${classroom} เลขที่ ${number}`, 100, y);
       }
 
-      // วาดดาวล่างสุด
       for (let i = 0; i < 5; i++) {
         ctx.fillText("★", 180 + i * 120, 1150);
       }
 
-      // ดาวน์โหลดภาพ
       const link = document.getElementById("downloadLink");
       link.href = canvas.toDataURL("image/png");
       const nameForFile = name.trim().replace(/\s+/g, "_");
