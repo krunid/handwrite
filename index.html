@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>แบบฝึกเขียนชื่อ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'LayijiDotted';
+      src: url('Layiji_kutlaimuu.ttf') format('truetype');
+    }
+    body {
+      font-family: 'Kanit', sans-serif;
+      background-color: #f0f4f8;
+    }
+    canvas {
+      border: 2px dashed #ccc;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center px-4 py-6 min-h-screen">
+  <div class="bg-white p-6 rounded-xl shadow-xl w-[900px] max-w-full flex-grow">
+    <h1 class="text-3xl font-bold text-center mb-2">📝 แบบฝึกเขียนชื่อตามเส้นประ</h1>
+    <p class="text-center text-gray-600 text-sm mb-6">
+      กรอก <strong>ชื่อ - นามสกุล</strong>, <strong>ชั้น</strong>, <strong>เลขที่</strong> และตัวเลือกอื่น ๆ จากนั้นกด <span class="text-blue-600 font-semibold">"สร้างใบงาน"</span>
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">เส้นใต้บรรทัด</label>
+        <select id="underline" class="w-full p-2 border rounded">
+          <option value="yes">มีเส้น</option>
+          <option value="no">ไม่มีเส้น</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">รูปแบบตัวเลข</label>
+        <select id="numberType" class="w-full p-2 border rounded">
+          <option value="arabic">อารบิก (1, 2, 3)</option>
+          <option value="thai">ไทย (๑, ๒, ๓)</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">รูปแบบบรรทัด</label>
+        <select id="lineMode" class="w-full p-2 border rounded">
+          <option value="full">เต็มบรรทัด</option>
+          <option value="half">ครึ่งบรรทัด</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div>
+        <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">ชื่อ - นามสกุล</label>
+        <input id="fullname" type="text" placeholder="เช่น สมชาย ใจดี" class="p-2 border rounded w-full">
+      </div>
+      <div>
+        <label for="classroom" class="block text-sm font-medium text-gray-700 mb-1">ชั้น</label>
+        <input id="classroom" type="text" placeholder="เช่น ป.3" class="p-2 border rounded w-full">
+      </div>
+      <div>
+        <label for="number" class="block text-sm font-medium text-gray-700 mb-1">เลขที่</label>
+        <input id="number" type="text" placeholder="เช่น 15" class="p-2 border rounded w-full">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div>
+        <label for="fontSize" class="block text-sm font-medium text-gray-700 mb-1">ขนาดตัวอักษร</label>
+        <select id="fontSize" class="w-full p-2 border rounded">
+          <option value="36">เล็ก (36px)</option>
+          <option value="48" selected>ปกติ (48px)</option>
+          <option value="60">ใหญ่ (60px)</option>
+        </select>
+      </div>
+    </div>
+
+    <button onclick="generateImage()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-bold mb-4">
+      ➕ สร้างใบงาน
+    </button>
+
+    <canvas id="myCanvas" width="900" height="1200" class="mx-auto"></canvas>
+
+    <a id="downloadLink" class="block mt-4 text-center bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">
+      📥 ดาวน์โหลดภาพ
+    </a>
+  </div>
+
+  <footer class="text-center mt-8 text-sm text-gray-500">
+    © 2025 จัดทำโดย ครูนิด | ระบบเขียนชื่อตามเส้นประเพื่อการเรียนรู้
+  </footer>
+
+  <script>
+    function toThaiNumber(num) {
+      const thNums = ["๐","๑","๒","๓","๔","๕","๖","๗","๘","๙"];
+      return num.toString().split("").map(d => thNums[parseInt(d)] || d).join("");
+    }
+
+    async function generateImage() {
+      const canvas = document.getElementById('myCanvas');
+      const ctx = canvas.getContext('2d');
+      const name = document.getElementById('fullname').value.trim();
+      const classroom = document.getElementById('classroom').value.trim();
+      const number = document.getElementById('number').value.trim();
+      const numberType = document.getElementById("numberType").value;
+      const lineMode = document.getElementById("lineMode").value;
+      const underline = document.getElementById("underline").value;
+      const fontSize = document.getElementById("fontSize").value;
+
+      const font = new FontFace('LayijiDotted', 'url(Layiji_kutlaimuu.ttf)');
+      await font.load();
+      document.fonts.add(font);
+      await document.fonts.ready;
+
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.font = `${fontSize}px LayijiDotted`;
+      ctx.fillStyle = "#000";
+      ctx.fillText("แบบฝึกหัดเขียนชื่อตามรอยปะ", 180, 60);
+
+      const startY = 120;
+      const lineHeight = 100;
+
+      // Check if classroom is empty or starts with อ., ป., or ม.
+      const skipClassAndNumber = !classroom || !number || /^[อปม]\./.test(classroom);
+
+      for (let i = 0; i < 10; i++) {
+        const y = startY + i * lineHeight;
+        const lineNumber = numberType === 'thai' ? toThaiNumber(i + 1) : (i + 1);
+        const showNumber = numberType === 'thai' ? toThaiNumber(number) : number;
+
+        if (underline === 'yes') {
+          ctx.beginPath();
+          ctx.moveTo(80, y - 20);  // เส้นบน
+          ctx.lineTo(canvas.width - 80, y - 20);
+          ctx.strokeStyle = "#ccc";
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(80, y + 40);  // เส้นล่าง
+          ctx.lineTo(canvas.width - 80, y + 40);
+          ctx.stroke();
+
+          if (lineMode === 'half') {
+            ctx.beginPath();
+            ctx.moveTo(80, y + 10);  // เส้นกลาง
+            ctx.lineTo(canvas.width - 80, y + 10);
+            ctx.stroke();
+          }
+        }
+
+        // Construct the text based on conditions
+        let text = `${lineNumber}. ${name}`;
+        if (!skipClassAndNumber) {
+          text += ` ชั้น ${classroom} เลขที่ ${showNumber}`;
+        }
+
+        if (lineMode === 'half') {
+          ctx.fillText(text, 100, y);
+          ctx.fillText(text, 100, y + 45);
+        } else {
+          ctx.fillText(text, 100, y + 20);
+        }
+      }
+
+      for (let i = 0; i < 5; i++) {
+        ctx.fillText("★", 180 + i * 120, 1150);
+      }
+
+      const link = document.getElementById("downloadLink");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `${name.replace(/\s+/g, "_") || "tracing-name"}.png`;
+    }
+  </script>
+</body>
+</html>
