@@ -29,21 +29,31 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">เส้นใต้บรรทัด</label>
+        <label for="displayMode" class="block text-sm font-medium text-gray-700 mb-1">รูปแบบการแสดง</label>
+        <select id="displayMode" class="w-full p-2 border rounded" onchange="toggleInputFields()">
+          <option value="general">ทั่วไป (ชื่อเท่านั้น)</option>
+          <option value="detailed" selected>คัด (ชื่อ, ชั้น, เลขที่)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div>
+        <label for="underline" class="block text-sm font-medium text-gray-700 mb-1">เส้นใต้บรรทัด</label>
         <select id="underline" class="w-full p-2 border rounded">
           <option value="yes">มีเส้น</option>
           <option value="no">ไม่มีเส้น</option>
         </select>
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">รูปแบบตัวเลข</label>
+        <label for="numberType" class="block text-sm font-medium text-gray-700 mb-1"> रूपแบบตัวเลข</label>
         <select id="numberType" class="w-full p-2 border rounded">
           <option value="arabic">อารบิก (1, 2, 3)</option>
           <option value="thai">ไทย (๑, ๒, ๓)</option>
         </select>
       </div>
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">รูปแบบบรรทัด</label>
+        <label for="lineMode" class="block text-sm font-medium text-gray-700 mb-1">รูปแบบบรรทัด</label>
         <select id="lineMode" class="w-full p-2 border rounded">
           <option value="full">เต็มบรรทัด</option>
           <option value="half">ครึ่งบรรทัด</option>
@@ -56,11 +66,11 @@
         <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">ชื่อ - นามสกุล</label>
         <input id="fullname" type="text" placeholder="เช่น สมชาย ใจดี" class="p-2 border rounded w-full">
       </div>
-      <div>
+      <div id="classroomContainer" class="hidden">
         <label for="classroom" class="block text-sm font-medium text-gray-700 mb-1">ชั้น</label>
         <input id="classroom" type="text" placeholder="เช่น ป.3" class="p-2 border rounded w-full">
       </div>
-      <div>
+      <div id="numberContainer" class="hidden">
         <label for="number" class="block text-sm font-medium text-gray-700 mb-1">เลขที่</label>
         <input id="number" type="text" placeholder="เช่น 15" class="p-2 border rounded w-full">
       </div>
@@ -98,6 +108,23 @@
       return num.toString().split("").map(d => thNums[parseInt(d)] || d).join("");
     }
 
+    function toggleInputFields() {
+      const displayMode = document.getElementById("displayMode").value;
+      const classroomContainer = document.getElementById("classroomContainer");
+      const numberContainer = document.getElementById("numberContainer");
+
+      if (displayMode === "general") {
+        classroomContainer.classList.add("hidden");
+        numberContainer.classList.add("hidden");
+      } else {
+        classroomContainer.classList.remove("hidden");
+        numberContainer.classList.remove("hidden");
+      }
+    }
+
+    // Initialize input fields visibility on page load
+    toggleInputFields();
+
     async function generateImage() {
       const canvas = document.getElementById('myCanvas');
       const ctx = canvas.getContext('2d');
@@ -108,6 +135,7 @@
       const lineMode = document.getElementById("lineMode").value;
       const underline = document.getElementById("underline").value;
       const fontSize = document.getElementById("fontSize").value;
+      const displayMode = document.getElementById("displayMode").value;
 
       const font = new FontFace('LayijiDotted', 'url(Layiji_kutlaimuu.ttf)');
       await font.load();
@@ -123,9 +151,6 @@
 
       const startY = 120;
       const lineHeight = 100;
-
-      // Check if classroom is empty or starts with อ., ป., or ม.
-      const skipClassAndNumber = !classroom || !number || /^[อปม]\./.test(classroom);
 
       for (let i = 0; i < 10; i++) {
         const y = startY + i * lineHeight;
@@ -152,9 +177,9 @@
           }
         }
 
-        // Construct the text based on conditions
+        // Construct the text based on display mode
         let text = `${lineNumber}. ${name}`;
-        if (!skipClassAndNumber) {
+        if (displayMode === 'detailed') {
           text += ` ชั้น ${classroom} เลขที่ ${showNumber}`;
         }
 
